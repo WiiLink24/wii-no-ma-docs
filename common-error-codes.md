@@ -32,7 +32,7 @@ The following is a non-exhaustive list of XML error codes. Contributions are mor
 
 ## How to debug
 
-Node errors are typically set via helper functions instead of directly to their object. Between Wii no Ma verison v1025 and v770, there are five functions that set the XML error code directly: `XMLError`, `XMLErrorOther`, `SetNodeMissing`, `SetNodeMissingDict`, and `SetNodeMissingDictContents`.
+Node errors are typically set via helper functions instead of directly to their object. Between Wii no Ma version v1025 and v770, there are five functions that set the XML error code directly: `XMLError`, `XMLErrorOther`, `SetNodeMissing`, `SetNodeMissingDict`, and `SetNodeMissingDictContents`.
 
 We hope the following table assists labeling efforts throughout reverse engineering.
 
@@ -59,7 +59,7 @@ We hope the following table assists labeling efforts throughout reverse engineer
 While `SetNodeMissingDict` produces the same error code as `SetNodeMissingDictContents` \(354117\), it is used differently:
 
 *  `SetNodeMissingDict` is called when a node that should contain a dictionary is missing and therefore had a child count of 0.
-*  `SetNodeMissingDictContents` is called whenever its contents are not within range of what is expected. It is typically called directly after
+*  `SetNodeMissingDictContents` is called whenever its contents are not within range of what is expected. It is typically called directly after instructions resembling the following:
 
 ```text
 lwz        r0, 0x0(r3)
