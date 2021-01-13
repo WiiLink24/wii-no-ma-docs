@@ -9,8 +9,8 @@ There are three known versions:
 | Version | Changes |
 | :--- | :--- |
 | v0 \(or v512\) | Initial release. For unknown reasons, this version was also re-released under the version v512. Nothing differs asides from the version. |
-| v770 | A major rewrite, adding a more refined room style. Internals are majorly rewritten and more stable. |
-| v1025 | Introduces the concept of the theatre, a separate room only for paid movies. Introduces a shop within. Much of v1025 is similar to v770, both internally and in format. |
+| v770 | A major rewrite, adding a more refined room style. Internals are majorly rewritten and more stable. Introduces the concept of the theatre, a separate room only for paid movies. |
+| v1025 | Introduces a shop within. Much of v1025 is similar to v770, both internally and in format. |
 
 {% hint style="info" %}
 The majority of this documentation centers around v1025. Ongoing efforts are being made to support v770 as well. Where possible, a note such as this one will appear.
