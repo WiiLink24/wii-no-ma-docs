@@ -1,61 +1,93 @@
 # Common Error Codes
 
-## What is first.bin?
+The following is a non-exhaustive list of XML error codes. Contributions are more than welcome. XML errors will always be within the range of 3541xx.
 
-`first.bin` is the file initially requested for configuration pointing to URL types the channel should request.
+## Error codes
 
-Despite it being XML internally, the file is encrypted. It's unknown why this design was chosen, as the file was served over HTTPS by Nintendo. AES is symmetric and provides no method of signing. Additionally, the keys are easily found within the channel's contents.
+<table>
+  <thead>
+    <tr>
+      <th style="text-align:left">Error</th>
+      <th style="text-align:left">Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align:left">354116</td>
+      <td style="text-align:left">A node is missing.</td>
+    </tr>
+    <tr>
+      <td style="text-align:left">354117</td>
+      <td style="text-align:left">
+        <p>A node contained a dictionary, but lacked sufficient children.</p>
+        <p>Typically this error is thrown when either too many or too little children
+          nodes were provided.</p>
+        <p></p>
+        <p>This error can be set by two individual functions. Please see <a href="common-error-codes.md#how-to-debug">How to debug</a> for
+          more information.</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
-This is AES-128-CBC encrypted, using keys available within the app's main arc.
+## How to debug
 
-Here is an example `openssl` command to decrypt an existing one using the default Nintendo-provided key and IV:
+Node errors are typically set via helper functions instead of directly to their object. Between Wii no Ma version v1025 and v770, there are five functions that set the XML error code directly: `XMLError`, `XMLErrorOther`, `SetNodeMissing`, `SetNodeMissingDict`, and `SetNodeMissingDictContents`.
+
+We hope the following table assists labeling efforts throughout reverse engineering.
+
+| Version | Symbol | Address |
+| :--- | :--- | :--- |
+| v770 | XMLError | 8025e454 |
+|  | XMLErrorOther | 8025e44c |
+|  | SetNodeMissing | 8025e474 |
+|  | SetNodeMissingDict | 8025e48c |
+|  | SetNodeMissingDictContents | 8025e498 |
+|  |  |  |
+| v1025 | XMLError | 802b0d64 |
+|  | XMLErrorOther | 802b0d5c |
+|  | SetNodeMissing | 802b0db0 |
+|  | SetNodeMissingDict | 802b0dc8 |
+|  | SetNodeMissingDictContents | 802b0e20 |
+
+### Meanings
+
+`XMLError` is used to set a specific error by an integer. It is worth breakpointing on it in general. `XMLErrorOther` is sparingly used throughout XML verification methods. If a specific XML error occurs and XMLError was not called, it is worth breakpointing on this as well before investigating otherwise.
+
+
+
+While `SetNodeMissingDict` produces the same error code as `SetNodeMissingDictContents` \(354117\), it is used differently:
+
+*  `SetNodeMissingDict` is called when a node that should contain a dictionary is missing and therefore had a child count of 0.
+*  `SetNodeMissingDictContents` is called whenever its contents are not within range of what is expected. It is typically called directly after instructions resembling the following:
 
 ```text
-openssl aes-128-cbc -d -in first.bin -out first.txt -K 943B13DD87468BA5D9B7A8B899F91803 -iv 66B33FC1373FE506EC2B59FB6B977C82
+lwz        r0, 0x0(r3)
+cmplw      r6, r0
+blt        MISSING_DICT
+lwz        r0, 0x4(r3)
+cmplw      r6,r0
+ble        MISSING_DICT
+
+MISSING_DICT:
+; in which r3 is the current XML object
+or         r3,r29,r29
+; and in which r4 is a pointer to this node's name, such as "categinfo"
+or         r4,r24,r24
+bl         SetNodeMissingDictContents
 ```
 
-To encrypt, simply swap the `-d` \(decrypt\) flag for `-e` \(encrypt\).
 
-## Example Contents
 
-```markup
-<Config>
-  <ver>399</ver>
-  <maint>0</maint>
-  <url1>http://url1.dev.wiilink24.com/</url1>
-  <url2>http://url2.dev.wiilink24.com/</url2>
-  <url3>http://url3.dev.wiilink24.com/</url3>
-  <eulaver>3</eulaver>
-  <shopurl>http://shop.dev.wiilink24.com/index.esf</shopurl>
-  <shopkey>7fce738e542f0a60fe5d8d8e1e8781af</shopkey>
-  <shopvalid>1</shopvalid>
-  <akahost>5</akahost>
-  <akaca>1</akaca>
-  <smpkey>5ab362aa57dbb1dc16849e3e2d1cf2ff</smpkey>
-  <fmax>30</fmax>
-  <bmax>10</bmax>
-  <upddt>2021-01-13T08:06:31</upddt>
-</Config>
+If you are looking for these functions yourself, a good way to orient yourself while reverse engineering is to find any instance of a reference to the string `ver` for `SetNodeMissing`, which can look like similar to this when decompiled:
+
+```c
+int len = strlen("ver");
+char* nodeContents = FindNodeContents(buffer, "ver", len);
+verNode = GetNode(nodes, "ver");
+if (nodeContents == NULL) {
+  SetNodeMissing(xmlObject, "ver");
+  success = 0;
+}
 ```
-
-* If `ver` is set to 9999, the title notes that it is discontinued with error 354606. This can be done with any request, however it makes the most sense to have set within the first request. If set, it does not persist, unlike other Nintendo-made channels.
-* `maint` is a [Boolean](generic-terminology.md#xml-types). If set, it displays an "under maintenace" dialog with error 354608.
-* `urlX` is a string used to set the URL used with each type. In general, `url1` is used for static data, `url2` is used for CGI-related requests, and `url3` is for static theatre data.
-  * v512 only requires `url1` and `url2`, as it lacks any theatre functionality. It will ignore `url3` if given.
-* `eulaver` is an Integer denotes the used version of the EULA. The EULA requested has no version attached, however - perhaps some part of save data is able to compare across versions.
-  * v512 requires an `eulaver` of 2, where v770/v1025 require 3.
-* `upddt` is a [DateTime](generic-terminology.md#xml-types). It does not appear to persist anywhere in save files or accessed elsewhere in memory.
-
-{% hint style="info" %}
-The following fields are used within v1025. v512 and v770 only use the fields listed above.
-{% endhint %}
-
-* `shopurl` is a direct URL to the encrypted SWF used for the shop.
-* `shopkey` is the AES key used for the encrypted shop SWF.
-  * Its corresponding IV is hardcoded to be `c12cf59b941a4d69b65771e8a8ef96e2`.
-*  `shopvalid` is a Boolean. It is unknown how it is used.
-* `akahost` is unknown at this time.
-* `smpkey` is the AES key used to encrypt food delivery SWFs.
-  * Its IV is unknown at this time.
-* `fmax` and `bmax` are unknown.
 
