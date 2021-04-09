@@ -44,7 +44,7 @@ To encrypt, simply swap the `-d` \(decrypt\) flag for `-e` \(encrypt\).
   * v512 only requires `url1` and `url2`, as it lacks any theatre functionality. It will ignore `url3` if given.
 * `eulaver` is an Integer denotes the used version of the EULA. The EULA requested has no version attached, however - perhaps some part of save data is able to compare across versions.
   * v512 requires an `eulaver` of 2, where v770/v1025 require 3.
-* `upddt` is a [DateTime](generic-terminology.md#xml-types). It does not appear to persist anywhere in save files.
+* `upddt` is a [DateTime](generic-terminology.md#xml-types). It does not appear to persist anywhere in save files or accessed elsewhere in memory.
 
 {% hint style="info" %}
 The following fields are used within v1025. v512 and v770 only use the fields listed above.
@@ -53,5 +53,9 @@ The following fields are used within v1025. v512 and v770 only use the fields li
 * `shopurl` is a direct URL to the encrypted SWF used for the shop.
 * `shopkey` is the AES key used for the encrypted shop SWF.
   * Its corresponding IV is hardcoded to be `c12cf59b941a4d69b65771e8a8ef96e2`.
-*  `shopvalid` is a Boolean
+*  `shopvalid` is a Boolean. It is unknown how it is used.
+* `akahost` is unknown at this time.
+* `smpkey` is the AES key used to encrypt food delivery SWFs.
+  * Its IV is unknown at this time.
+* `fmax` and `bmax` are unknown.
 

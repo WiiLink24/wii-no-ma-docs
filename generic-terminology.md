@@ -16,13 +16,13 @@ Every request follows this basic form:
 
 It should be noted `ver` is version-dependent.
 
-| Version |  |
+| Title Version | XML Version |
 | :--- | :--- |
 | v0/v512 | 1 |
 | v770 | 1 |
 | v1025 | 399 |
 
-In the case of v1025, 399 is not checked specifically. As long as the presented version has a result of 3 when divided by 100, it is valid.
+In the case of v1025, the version is divided by 100 and equated to 3. We choose 399 simply because it's possible. - anything in the range of 300-399 would work the same.
 
 ## XML Types
 
