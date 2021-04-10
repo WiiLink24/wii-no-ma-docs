@@ -22,7 +22,6 @@ The following is a non-exhaustive list of XML error codes. Contributions are mor
         <p>A node contained a dictionary, but lacked sufficient children.</p>
         <p>Typically this error is thrown when either too many or too little children
           nodes were provided.</p>
-        <p></p>
         <p>This error can be set by two individual functions. Please see <a href="common-error-codes.md#how-to-debug">How to debug</a> for
           more information.</p>
       </td>
@@ -54,12 +53,10 @@ We hope the following table assists labeling efforts throughout reverse engineer
 
 `XMLError` is used to set a specific error by an integer. It is worth breakpointing on it in general. `XMLErrorOther` is sparingly used throughout XML verification methods. If a specific XML error occurs and XMLError was not called, it is worth breakpointing on this as well before investigating otherwise.
 
-
-
 While `SetNodeMissingDict` produces the same error code as `SetNodeMissingDictContents` \(354117\), it is used differently:
 
-*  `SetNodeMissingDict` is called when a node that should contain a dictionary is missing and therefore had a child count of 0.
-*  `SetNodeMissingDictContents` is called whenever its contents are not within range of what is expected. It is typically called directly after instructions resembling the following:
+* `SetNodeMissingDict` is called when a node that should contain a dictionary is missing and therefore had a child count of 0.
+* `SetNodeMissingDictContents` is called whenever its contents are not within range of what is expected. It is typically called directly after instructions resembling the following:
 
 ```text
 lwz        r0, 0x0(r3)
@@ -76,8 +73,6 @@ or         r3,r29,r29
 or         r4,r24,r24
 bl         SetNodeMissingDictContents
 ```
-
-
 
 If you are looking for these functions yourself, a good way to orient yourself while reverse engineering is to find any instance of a reference to the string `ver` for `SetNodeMissing`, which can look like similar to this when decompiled:
 
