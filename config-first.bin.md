@@ -42,7 +42,7 @@ To encrypt, simply swap the `-d` \(decrypt\) flag for `-e` \(encrypt\).
 
 * `ver` is the same as any other request. If set to 9999, it states that the service has been discontinued and returns an error of 354606.
 * `maint` is a Boolean. If true, it states that the service is under maintenance with an error of 354608.
-* `urX` provides the direct URL to various service types.
+* `urX` provides the direct URL to various service types. See [URL Structure](generic-terminology.md#url-structure) for more than this brief synopsis.
   * `url1` is typically used for static data, such as image assets.
   * `url2` has CGI data.
   * `url3` has static theatre data. As such, it is not used in v512.
