@@ -19,7 +19,7 @@ TODO: Write documentation. There are also getter/setters on the objects, and cla
 
 | name | description |
 | :--- | :--- |
-| GetMessage |  |
+| GetMessage | Appears to return false if there is no message. |
 | GetShopId |  |
 
 ## `wiinoma.Sound`
@@ -44,7 +44,7 @@ TODO: Write documentation. There are also getter/setters on the objects, and cla
 | :--- | :--- |
 | Exit |  |
 | ExitToLiving |  |
-| FinishedStartup |  |
+| FinishedStartup | Ends the infinite loading screen. |
 | DisableApplicationExit |  |
 | EnableMouse |  |
 | DisableMouse |  |
