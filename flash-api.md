@@ -80,14 +80,25 @@ TODO: Write documentation. There are also getter/setters on the objects, and cla
 
 | name | description |
 | :--- | :--- |
-| GetNum |  |
-| GetFamilyId |  |
-| GetName |  |
-| GetIconUrl |  |
+| GetNum | Returns the current Mii's ID as a `Number`. It is one-indexed, so please subtract 1 to get its true ID. |
+| GetFamilyId\(miiNum\) | Returns the Mii's family ID as a `Number`. |
+| GetName\(miiNum\) | Returns the Mii's name as a `String`. |
+| GetIconUrl\(facialType, miiNum\) | Returns a usable render of a specified Mii as a `String`. See [Facial Types](flash-api.md#facial-types) for usable types. |
 | SetIconBgColor |  |
 | SetIconSize |  |
-| GetAge |  |
-| GetGender |  |
+| GetAge\(miiNum\) | Returns the Mii's age as a `Number`. |
+| GetGender\(miiNum\) | Returns the Mii's gender as a `Boolean`. False is female, true is male. |
+
+### Facial Types
+
+| Type Name |
+| :--- |
+| `normal` |
+| `anger` |
+| `sorrow` |
+| `surprise` |
+| `blink` |
+| `openmouth` |
 
 ## `wiinoma.Keyboard`
 
