@@ -59,6 +59,7 @@ The following fields are speciifc to v1025. They are ignored if set in older ver
 * `shopvalid` is unknown. It does not appear to be used once set, and does not hide/remove the shop.
 * `akahost` is a string. If a URL matches the host, `akaca` is checked.
 * `akaca` is a Boolean. If true, it appears to load `AddTrustExternalCARoot.cer` and `GTEGlRoot.der` to the IOS SSL trust store for requests. This additionally appears to occur for domains matching `.wiinoma.co.jp` and `.ext.wapp.wii.com`.
-* `smpkey` appears to be the key used to encrypt SWFs used for external deliveries.
+* `smpkey` appears to be the key used to encrypt SWFs used for external deliveries, alongside special movies.
+  * Its respective IV is `09d4fbfca400c13da01cbf835da3243a`.
 * `fmax` and `bmax` are unknown. They both have been observed to be 10.
 
